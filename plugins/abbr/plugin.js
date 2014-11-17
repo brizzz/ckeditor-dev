@@ -1,0 +1,42 @@
+CKEDITOR.plugins.add( 'abbr', {
+    icons: 'abbr',
+    onLoad: function() {
+//        console.log('on load callback fired');
+    },
+    init: function( editor ) {
+
+        editor.addCommand   ( 'abbr', new CKEDITOR.dialogCommand( 'abbrDialog', {
+            allowedContent: 'abbr[title,id]',
+            requiredContent: 'abbr',
+            contentForms: [
+                'abbr',
+                'acronym'
+            ]
+        } ) );
+
+        editor.ui.addButton( 'Abbr', {
+            label: 'Insert Abbreviation',
+            command: 'abbr',
+            toolbar: 'insert'
+        });
+
+        CKEDITOR.dialog.add( 'abbrDialog', this.path    + 'dialogs/abbr.js' );
+
+        if ( editor.contextMenu ) {
+            editor.addMenuGroup( 'abbrGroup' );
+            editor.addMenuItem( 'abbrItem', {
+                label: 'Edit Abbreviation',
+                icon: this.path + 'icons/abbr.png',
+                command: 'abbr',
+                group: 'abbrGroup'
+            });
+
+            editor.contextMenu.addListener( function( element ) {
+                if ( element.getAscendant( 'abbr', true ) ) {
+                    return { abbrItem: CKEDITOR.TRISTATE_OFF };
+                }
+            });
+        }
+    }
+});
+
